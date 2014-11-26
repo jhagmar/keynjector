@@ -1630,15 +1630,17 @@ static view_t pin_view = {
 #define KEY_DOWN_LEFT (KEY_UP_RIGHT + 2*KEY_BTN_PAD)
 #define KEY_DOWN_RIGHT (KEY_DOWN_LEFT + KEY_BTN_WIDTH)
 
+static void key_up_click(btn_control_t *b);
+static void key_down_click(btn_control_t *b);
 // key view definitions
 static bg_control_t key_bg_1 = {bg_render, NULL, NULL, NULL, 0, 0, 240, KEY_TOP_PAD};
 //static bmp_control_t key_logo = {bmp_render, NULL, NULL, NULL, 0, 10, LCD_WIDTH, LOGO_HEIGHT, (bmp_t*)&logo, 0x00};
 static lbx_control_t key_lbx = {lbx_render, lbx_mouse_down, lbx_mouse_up, lbx_mouse_move, 0, KEY_TOP_PAD, LCD_WIDTH, KEY_LBX_HEIGHT, NULL, 0, 0, 0, 0, -1, lbx_timer_tick, NULL, lbx_long_press, 0, 0x00};
 static bg_control_t key_bg_2 = {bg_render, NULL, NULL, NULL, 0, KEY_TOP_PAD + KEY_LBX_HEIGHT, 240, 5};
 static bg_control_t key_bg_3 = {bg_render, NULL, NULL, NULL, 0, KEY_BTN_TOP, KEY_UP_LEFT, KEY_BTN_HEIGHT};
-static gbtn_control_t key_btn_up = {gbtn_render, btn_mouse_down, btn_mouse_up, btn_mouse_move, KEY_UP_LEFT, KEY_BTN_TOP, KEY_BTN_WIDTH, KEY_BTN_HEIGHT, (bmp_t*)&up_arrow, 0, 0x00, pass_back_click};
+static gbtn_control_t key_btn_up = {gbtn_render, btn_mouse_down, btn_mouse_up, btn_mouse_move, KEY_UP_LEFT, KEY_BTN_TOP, KEY_BTN_WIDTH, KEY_BTN_HEIGHT, (bmp_t*)&up_arrow, 0, 0x00, key_up_click};
 static bg_control_t key_bg_4 = {bg_render, NULL, NULL, NULL, KEY_UP_RIGHT, KEY_BTN_TOP, 2*KEY_BTN_PAD, KEY_BTN_HEIGHT};
-static gbtn_control_t key_btn_down = {gbtn_render, btn_mouse_down, btn_mouse_up, btn_mouse_move, KEY_DOWN_LEFT, KEY_BTN_TOP, KEY_BTN_WIDTH, KEY_BTN_HEIGHT, (bmp_t*)&down_arrow, 0, 0x00, pass_fwd_click};
+static gbtn_control_t key_btn_down = {gbtn_render, btn_mouse_down, btn_mouse_up, btn_mouse_move, KEY_DOWN_LEFT, KEY_BTN_TOP, KEY_BTN_WIDTH, KEY_BTN_HEIGHT, (bmp_t*)&down_arrow, 0, 0x00, key_down_click};
 static bg_control_t key_bg_5 = {bg_render, NULL, NULL, NULL, KEY_DOWN_RIGHT, KEY_BTN_TOP, LCD_WIDTH - KEY_DOWN_RIGHT, KEY_BTN_HEIGHT};
 static bg_control_t key_bg_6 = {bg_render, NULL, NULL, NULL, 0, KEY_BTN_TOP + KEY_BTN_HEIGHT, LCD_WIDTH, KEY_BTN_PAD};
 
@@ -2151,6 +2153,32 @@ void pin_start_command(int command) {
 		break;
 	}
 
+}
+
+
+			
+			
+
+static void key_up_click(btn_control_t *b) {
+	int origin;
+
+	origin = key_lbx.origin - key_lbx.height + LBX_ITEM_HEIGHT;
+	if (origin < 0) origin = 0;
+
+	key_lbx.origin = origin;
+	key_lbx.render((control_t*)&key_lbx);
+}
+
+static void key_down_click(btn_control_t *b) {
+	int origin;
+	int max_origin;
+
+	max_origin = (key_lbx.n_items - (key_lbx.height / LBX_ITEM_HEIGHT - 2)) * LBX_ITEM_HEIGHT;
+	origin = key_lbx.origin + key_lbx.height - LBX_ITEM_HEIGHT;
+	if (origin >  max_origin) origin = max_origin;
+
+	key_lbx.origin = origin;
+	key_lbx.render((control_t*)&key_lbx);
 }
 
 // key screen timer tick

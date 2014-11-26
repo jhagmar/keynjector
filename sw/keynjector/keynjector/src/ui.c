@@ -1619,11 +1619,30 @@ static view_t pin_view = {
 	(control_t*)&pin_bg_18,
 	NULL}};
 
+#define KEY_TOP_PAD 10
+#define KEY_BTN_HEIGHT 50
+#define KEY_BTN_WIDTH 80
+#define KEY_BTN_PAD 5
+#define KEY_LBX_HEIGHT (LCD_HEIGHT - KEY_TOP_PAD - 2*KEY_BTN_PAD - KEY_BTN_HEIGHT)
+#define KEY_BTN_TOP (KEY_TOP_PAD + KEY_LBX_HEIGHT)
+#define KEY_UP_LEFT (LCD_WIDTH/2 - KEY_BTN_PAD - KEY_BTN_WIDTH)
+#define KEY_UP_RIGHT (KEY_UP_LEFT + KEY_BTN_WIDTH)
+#define KEY_DOWN_LEFT (KEY_UP_RIGHT + 2*KEY_BTN_PAD)
+#define KEY_DOWN_RIGHT (KEY_DOWN_LEFT + KEY_BTN_WIDTH)
+
+static void key_up_click(btn_control_t *b);
+static void key_down_click(btn_control_t *b);
 // key view definitions
-static bg_control_t key_bg_1 = {bg_render, NULL, NULL, NULL, 0, 0, 240, 10};
-static bmp_control_t key_logo = {bmp_render, NULL, NULL, NULL, 0, 10, LCD_WIDTH, LOGO_HEIGHT, (bmp_t*)&logo, 0x00};
-static bg_control_t key_bg_2 = {bg_render, NULL, NULL, NULL, 0, 40, 240, 10};
-static lbx_control_t key_lbx = {lbx_render, lbx_mouse_down, lbx_mouse_up, lbx_mouse_move, 0, 50, LCD_WIDTH, LCD_HEIGHT-50, NULL, 0, 0, 0, 0, -1, lbx_timer_tick, NULL, lbx_long_press, 0, 0x00};
+static bg_control_t key_bg_1 = {bg_render, NULL, NULL, NULL, 0, 0, 240, KEY_TOP_PAD};
+//static bmp_control_t key_logo = {bmp_render, NULL, NULL, NULL, 0, 10, LCD_WIDTH, LOGO_HEIGHT, (bmp_t*)&logo, 0x00};
+static lbx_control_t key_lbx = {lbx_render, lbx_mouse_down, lbx_mouse_up, lbx_mouse_move, 0, KEY_TOP_PAD, LCD_WIDTH, KEY_LBX_HEIGHT, NULL, 0, 0, 0, 0, -1, lbx_timer_tick, NULL, lbx_long_press, 0, 0x00};
+static bg_control_t key_bg_2 = {bg_render, NULL, NULL, NULL, 0, KEY_TOP_PAD + KEY_LBX_HEIGHT, 240, 5};
+static bg_control_t key_bg_3 = {bg_render, NULL, NULL, NULL, 0, KEY_BTN_TOP, KEY_UP_LEFT, KEY_BTN_HEIGHT};
+static gbtn_control_t key_btn_up = {gbtn_render, btn_mouse_down, btn_mouse_up, btn_mouse_move, KEY_UP_LEFT, KEY_BTN_TOP, KEY_BTN_WIDTH, KEY_BTN_HEIGHT, (bmp_t*)&up_arrow, 0, 0x00, key_up_click};
+static bg_control_t key_bg_4 = {bg_render, NULL, NULL, NULL, KEY_UP_RIGHT, KEY_BTN_TOP, 2*KEY_BTN_PAD, KEY_BTN_HEIGHT};
+static gbtn_control_t key_btn_down = {gbtn_render, btn_mouse_down, btn_mouse_up, btn_mouse_move, KEY_DOWN_LEFT, KEY_BTN_TOP, KEY_BTN_WIDTH, KEY_BTN_HEIGHT, (bmp_t*)&down_arrow, 0, 0x00, key_down_click};
+static bg_control_t key_bg_5 = {bg_render, NULL, NULL, NULL, KEY_DOWN_RIGHT, KEY_BTN_TOP, LCD_WIDTH - KEY_DOWN_RIGHT, KEY_BTN_HEIGHT};
+static bg_control_t key_bg_6 = {bg_render, NULL, NULL, NULL, 0, KEY_BTN_TOP + KEY_BTN_HEIGHT, LCD_WIDTH, KEY_BTN_PAD};
 
 void key_timer_tick(view_t *v);
 void key_start_command(int command);
@@ -1633,9 +1652,15 @@ static view_t key_view = {
 	key_start_command,
 	NULL,
 	{(control_t*)&key_bg_1, 
-	(control_t*)&key_logo, 
-	(control_t*)&key_bg_2,
+	//(control_t*)&key_logo, 
 	(control_t*)&key_lbx,
+	(control_t*)&key_bg_2,
+	(control_t*)&key_bg_3,
+	(control_t*)&key_btn_up,
+	(control_t*)&key_bg_4,
+	(control_t*)&key_btn_down,
+	(control_t*)&key_bg_5,
+	(control_t*)&key_bg_6,
 	NULL}};
 	
 void lcd_set_title_msg(char const *msg) {
@@ -2130,6 +2155,33 @@ void pin_start_command(int command) {
 
 }
 
+
+			
+			
+
+static void key_up_click(btn_control_t *b) {
+	int origin;
+
+	origin = key_lbx.origin - key_lbx.height + LBX_ITEM_HEIGHT;
+	if (origin < 0) origin = 0;
+
+	key_lbx.origin = origin;
+	key_lbx.render((control_t*)&key_lbx);
+}
+
+static void key_down_click(btn_control_t *b) {
+	int origin;
+	int max_origin;
+
+	max_origin = (key_lbx.n_items - (key_lbx.height / LBX_ITEM_HEIGHT - 2)) * LBX_ITEM_HEIGHT;
+	if (max_origin < 0) max_origin = 0;
+	origin = key_lbx.origin + key_lbx.height - LBX_ITEM_HEIGHT;
+	if (origin >  max_origin) origin = max_origin;
+
+	key_lbx.origin = origin;
+	key_lbx.render((control_t*)&key_lbx);
+}
+
 // key screen timer tick
 void key_timer_tick(view_t *v) {
 
@@ -2161,11 +2213,15 @@ void key_timer_tick(view_t *v) {
 	alpha = (fade_in) ? fade_in_alpha() : fade_out_alpha();
 
 	// redraw with new alpha
-	key_logo.alpha =
+	//key_logo.alpha =
+	key_btn_up.alpha =
+		key_btn_down.alpha =
 		key_lbx.alpha = alpha;
 
-	key_logo.render((control_t*)&key_logo);
+	//key_logo.render((control_t*)&key_logo);
 	key_lbx.render((control_t*)&key_lbx);
+	key_btn_up.render((control_t*)&key_btn_up);
+	key_btn_down.render((control_t*)&key_btn_down);
 
 	if (animation_timer == 0) {
 		finished_command = current_command;

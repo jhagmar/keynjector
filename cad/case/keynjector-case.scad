@@ -29,7 +29,8 @@ pcb_depth = 1.76;
 component_depth = 2.7; // largest component is USB connector
 screen_width = 42.72;
 screen_height = 60.26;
-screen_depth = 3.6;
+screen_back_film_thickness = 0.1;
+screen_depth = 3.6 + screen_back_film_thickness;
 screen_top = 2.9; // distance from top to viewport
 holder_height = 10; // height of screen holder
 holder_width = 10;
@@ -47,6 +48,12 @@ btn_protrude = 0.5;
 sd_y_offset = -18.3;
 sd_height = 12;
 sd_depth = 2;
+nut_depth = 1.6; // max depth of DIN 934 M2 nut
+nut_diameter = 4; // diameter of DIN 934 M2 nut
+nut_clearance = 0.1;
+screw_head_diameter = 3.8; // DIN 965 M2
+screw_body_diameter = 2; // DIN 965 M2
+screw_depth = 5;
 pcb_real_height_offset = (pcb_height - pcb_drawing_height)/2;
 usb_coord = [[usb_a/2,0], [usb_b/2, (usb_b - usb_a)/2],
 	[usb_b/2, usb_c], [-usb_b/2, usb_c],
@@ -89,9 +96,12 @@ holder2_x2 = holder1_x2
 
 /***** Renders *****/
 
-$fn=10;
+$fn=50;
 
+case_back();
 holder();
+case_front();
+btn();
 
 /***** Modules *****/
 
@@ -264,9 +274,18 @@ module sd_hole() {
 // screen holders
 module holder() {
 
-	box(holder1_x1, holder1_x2);
+	difference() {
+		box(holder1_x1, holder1_x2);
+		screws();
+		nuts();
+	}
 	
-	box(holder2_x1, holder2_x2);
+	difference() {
+		box(holder2_x1, holder2_x2);
+		screws();
+		nuts();
+	}
+	
 }
 
 module front_mask() {
@@ -342,8 +361,75 @@ module case_front() {
 
 // the back part of the case, suitable for 3D printing
 module case_back() {
-	intersection() {
-		case();
-		back_mask();
+	difference() {
+		intersection() {
+			case();
+			back_mask();
+		}
+		screws();
 	}
+}
+
+module hexagon(r) {
+	a = 2*r / sqrt(3);
+	polygon([[r, a/2], [0, a], [-r, a/2], 
+		[-r, -a/2], [0, -a], [r, -a/2]]); 
+}
+
+// hole for DIN 965 screw
+module din965() {
+	union() {
+		translate([0,0,-eps]) {
+			cylinder(h=screw_head_diameter/2 + eps, 
+				d1=screw_head_diameter, d2=0);
+		}
+		cylinder(h=screw_depth, d=screw_body_diameter);
+	}
+}
+
+// screw holes
+module screws() {
+	translate([(holder1_x1[0] + holder1_x2[0])/2,
+		(holder1_x1[1] + holder1_x2[1])/2,
+		-case_depth/2]) {
+	
+		din965();
+	}
+	translate([(holder2_x1[0] + holder2_x2[0])/2,
+		(holder2_x1[1] + holder2_x2[1])/2,
+		-case_depth/2]) {
+	
+		din965();
+	}
+}
+
+// hole for nut
+module nut() {
+
+	h = holder1_x2[2] - holder1_x1[2] 
+		- (screw_depth - wall_thickness)
+		+ nut_depth;
+
+	translate([0,0,eps])
+		rotate(180, [1,0,0])
+			linear_extrude(h + eps)
+				hexagon(nut_diameter/2 + nut_clearance);
+}
+
+// nut holes
+module nuts() {
+
+	translate([(holder1_x1[0] + holder1_x2[0])/2,
+		(holder1_x1[1] + holder1_x2[1])/2,
+		holder1_x2[2]]) {
+	
+		nut();
+	}
+	translate([(holder2_x1[0] + holder2_x2[0])/2,
+		(holder2_x1[1] + holder2_x2[1])/2,
+		holder2_x2[2]]) {
+	
+		nut();
+	}
+
 }

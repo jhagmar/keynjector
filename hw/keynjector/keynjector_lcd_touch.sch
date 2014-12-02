@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 6 7
 Title ""
-Date "6 nov 2014"
+Date "2 dec 2014"
 Rev ""
 Comp ""
 Comment1 ""
@@ -526,4 +526,6 @@ F 3 "" H 7450 5400 60  0000 C CNN
 	1    7450 5400
 	1    0    0    -1  
 $EndComp
+Text Notes 900  850  0    60   ~ 0
+Copyright 2014 Jonas Hagmar\n\nThis file is part of keynjector.\n\nkeynjector is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 2 of the License, or\n(at your option) any later version.\n\nkeynjector is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with keynjector.  If not, see <http://www.gnu.org/licenses/>
 $EndSCHEMATC

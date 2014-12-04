@@ -54,6 +54,8 @@ nut_clearance = 0.1;
 screw_head_diameter = 3.8; // DIN 965 M2
 screw_body_diameter = 2; // DIN 965 M2
 screw_depth = 5;
+dbg_y_offset = -26; // offset for debug header window
+dbg_x_offset = -8; 
 pcb_real_height_offset = (pcb_height - pcb_drawing_height)/2;
 usb_coord = [[usb_a/2,0], [usb_b/2, (usb_b - usb_a)/2],
 	[usb_b/2, usb_c], [-usb_b/2, usb_c],
@@ -92,16 +94,30 @@ holder2_x1 = holder1_x1
 	+ [case_width - 2*wall_thickness - holder_width,0,0];
 holder2_x2 = holder1_x2 
 	+ [case_width - 2*wall_thickness - holder_width,0,0];
+dbg_x2 = [case_width/2 - wall_thickness,
+	case_height/2 - wall_thickness + dbg_y_offset,
+	-case_depth/2 + wall_thickness + eps];
+dbg_x1 = [dbg_x2[0] + dbg_x_offset,
+	pcb_x1[1], -case_depth/2 - eps];
 
 
 /***** Renders *****/
 
-$fn=50;
+//$fn=100;
 
-case_back();
-holder();
-case_front();
-btn();
+//case_back();
+//case_back_normalized();
+//case_back_dbg();
+//case_back_dbg_normalized();
+
+//holder();
+//holder_normalized();
+
+//case_front();
+//case_front_normalized();
+
+//btn();
+//btn_normalized();
 
 /***** Modules *****/
 
@@ -110,6 +126,8 @@ module translated_sphere(r, x) {
 		sphere(r);
 }
 
+// construct a rounded cube by taking the hull of
+// spheres in the corners
 module rounded_cube(w, h, d, r) {
 	hull() {
 		translated_sphere(r, [w/2 - r, h/2 - r, 
@@ -185,7 +203,7 @@ module viewport_fillet() {
 	}
 }
 
-// lcd display
+// lcd
 module screen() {
 	box(screen_x1, screen_x2);
 }
@@ -231,15 +249,8 @@ module btn_hole() {
 	}
 }
 
-// user button
-module btn() {
-	translate([case_width/2,
-		case_height/2 - wall_thickness + btn_y_offset 
-		- pcb_real_height_offset,
-		- case_depth/2 + wall_thickness + pcb_depth + btn_width/2])
-	rotate(90, [0,0,1])
-	rotate(90, [1,0,0])
-	translate([0,0,-(btn_base_depth + wall_thickness)])
+// user button translated to have center at 0
+module btn_normalized() {
 	union() {
 		linear_extrude(btn_base_depth)
 		translate([-btn_base_height/2, -btn_width/2,0])
@@ -255,6 +266,18 @@ module btn() {
 			}
 		}
 	}
+}
+
+// user button
+module btn() {
+	translate([case_width/2,
+		case_height/2 - wall_thickness + btn_y_offset 
+		- pcb_real_height_offset,
+		- case_depth/2 + wall_thickness + pcb_depth + btn_width/2])
+	rotate(90, [0,0,1])
+	rotate(90, [1,0,0])
+	translate([0,0,-(btn_base_depth + wall_thickness)])
+	btn_normalized();
 }
 
 // micro sd card slot
@@ -288,6 +311,16 @@ module holder() {
 	
 }
 
+// screen holder at 0
+module holder_normalized() {
+	translate([-(holder1_x2[0] + holder2_x1[0])/2,
+		-(holder1_x1[1] + holder2_x2[1])/2,
+		-holder1_x1[2]]) {
+		holder();
+	}
+}
+
+// mask for the case front
 module front_mask() {
 	
 	difference() {
@@ -306,14 +339,11 @@ module front_mask() {
 			case_height/2 + eps, 
 			-case_depth/2 + wall_thickness + pcb_depth + usb_zoffset
 			+ usb_c]);
-
-		//box(holder1_x1 + [-eps,-eps,-eps], holder1_x2 + [eps,eps,eps]);
-	
-		//box(holder2_x1 + [-eps,-eps,-eps], holder2_x2 + [eps,eps,eps]);
 		
 	}
 }
 
+// mask for the case back
 module back_mask() {
 
 	difference() {
@@ -322,12 +352,6 @@ module back_mask() {
 
 		front_mask();
 		
-		//box(holder1_x1 + [-2*eps,-2*eps,-2*eps], 
-		//	holder1_x2 + [2*eps,2*eps,2*eps]);
-	
-		//box(holder2_x1 + [-2*eps,-2*eps,-2*eps], 
-		//	holder2_x2 + [2*eps,2*eps,2*eps]);
-
 	}
 }
 
@@ -359,6 +383,13 @@ module case_front() {
 	}
 }
 
+// front part of case at 0
+module case_front_normalized() {
+	rotate(180, [0, 1, 0])
+		translate([0,0,-case_depth/2])
+			case_front();
+}
+
 // the back part of the case, suitable for 3D printing
 module case_back() {
 	difference() {
@@ -368,6 +399,27 @@ module case_back() {
 		}
 		screws();
 	}
+}
+
+// back part of case at 0
+module case_back_normalized() {
+	translate([0,0,case_depth/2])
+		case_back();	
+}
+
+// the back part of the case, suitable for 3D printing, with hole
+// for debug header
+module case_back_dbg() {
+	difference() {
+		case_back();
+		dbg();
+	}
+}
+
+// the back part of the case, with debug header hole, at 0
+module case_back_dbg_normalized() {
+	translate([0,0,case_depth/2])
+		case_back_dbg();	
 }
 
 module hexagon(r) {
@@ -432,4 +484,9 @@ module nuts() {
 		nut();
 	}
 
+}
+
+// debug header hole
+module dbg() {
+	box(dbg_x1, dbg_x2);
 }

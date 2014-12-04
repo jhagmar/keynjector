@@ -99,13 +99,20 @@ dbg_x2 = [case_width/2 - wall_thickness,
 	-case_depth/2 + wall_thickness + eps];
 dbg_x1 = [dbg_x2[0] + dbg_x_offset,
 	pcb_x1[1], -case_depth/2 - eps];
+sup_size = 1; // size of display support
+sup1_x1 = [pcb_x1[0], pcb_x2[1] - sup_size, pcb_x1[2]-eps];
+sup1_x2 = [sup1_x1[0]+sup_size, sup1_x1[1]+sup_size, 
+	sup1_x1[2]+pcb_depth+component_depth+eps];
+sup2_x1 = sup1_x1 + [pcb_width - sup_size, 0, 0];
+sup2_x2 = sup1_x2 + [pcb_width - sup_size, 0, 0];
 
 
 /***** Renders *****/
 
 //$fn=100;
 
-//case_back();
+case_back();
+//back_mask();
 //case_back_normalized();
 //case_back_dbg();
 //case_back_dbg_normalized();
@@ -311,6 +318,12 @@ module holder() {
 	
 }
 
+// screen support
+module sup() {
+	box(sup1_x1, sup1_x2);
+	box(sup2_x1, sup2_x2);
+}
+
 // screen holder at 0
 module holder_normalized() {
 	translate([-(holder1_x2[0] + holder2_x1[0])/2,
@@ -339,6 +352,8 @@ module front_mask() {
 			case_height/2 + eps, 
 			-case_depth/2 + wall_thickness + pcb_depth + usb_zoffset
 			+ usb_c]);
+
+		box(sup1_x1 - [0,eps,0], sup2_x2);
 		
 	}
 }
@@ -357,21 +372,24 @@ module back_mask() {
 
 // the case
 module case() {
-	difference() {
-		union() {
-			difference() {
-				case_body();
-				viewport_cut_out();
+  	union() {
+		difference() {
+			union() {
+				difference() {
+					case_body();
+					viewport_cut_out();
+				}
+				viewport_fillet();
 			}
-			viewport_fillet();
+			screen();
+			pcb();
+			components();
+			cable_hole();
+			usb_hole();
+			btn_hole();
+			sd_hole();
 		}
-		screen();
-		pcb();
-		components();
-		cable_hole();
-		usb_hole();
-		btn_hole();
-		sd_hole();
+		sup();
 	}
 }
 

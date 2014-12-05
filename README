@@ -1,0 +1,31 @@
+This is the README file for keynjector. Unless otherwise stated, all files in the keynjector project are Copyright Jonas Hagmar 2014, and licensed under GPL v2. A copy of the GPL v2 can be found in COPYING.
+
+Jonas Hagmar can be contacted at jonas.hagmar@gmail.com.
+
+A brief overview of the directory structure of the project:
+
+cad - CAD drawings
+
+cad/case - OpenSCAD drawing of the case, suitable for 3D printing.
+
+docs - documents
+
+docs/datasheets - datasheets of components listed in the bill of materials (BOM)
+
+hw - hardware designs
+
+hw/bom - BOM for the hardware designs
+
+hw/keynjector - KiCad project for the keynjector PCB
+
+hw/zifbrkout - KiCad project for a breakout board which is helpful for testing the LCD connector on the keynjector board
+
+misc - miscellaneous
+
+misc/fonts - fonts used in the keynjector software
+
+sw - software
+
+sw/keynjector - Atmel Studio ASF project for the keynjector firmware
+
+sw/keynjector_ui - Visual Studio 2010 project for desktop development of the keynjector UI, for faster iterations than trying out the code directly on the keynjector board

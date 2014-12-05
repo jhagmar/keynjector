@@ -109,21 +109,21 @@ sup2_x2 = sup1_x2 + [pcb_width - sup_size, 0, 0];
 
 /***** Renders *****/
 
-//$fn=100;
+//$fn=20;
 
 case_back();
-//back_mask();
 //case_back_normalized();
+
 //case_back_dbg();
 //case_back_dbg_normalized();
 
 //holder();
 //holder_normalized();
 
-//case_front();
+case_front();
 //case_front_normalized();
 
-//btn();
+btn();
 //btn_normalized();
 
 /***** Modules *****/

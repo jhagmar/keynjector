@@ -1,6 +1,8 @@
 This is the README file for keynjector. Unless otherwise stated, all files in the keynjector project are Copyright Jonas Hagmar 2014, and licensed under GPL v2. A copy of the GPL v2 can be found in COPYING.
 
-Jonas Hagmar can be contacted at jonas.hagmar@gmail.com.
+Please refer to the AUTHORS file for contact information.
+
+DIRECTORY STRUCTURE
 
 A brief overview of the directory structure of the project:
 
@@ -29,3 +31,115 @@ sw - software
 sw/keynjector - Atmel Studio ASF project for the keynjector firmware
 
 sw/keynjector_ui - Visual Studio 2010 project for desktop development of the keynjector UI, for faster iterations than trying out the code directly on the keynjector board
+
+THIRD PARTY LICENSES
+
+The project uses the following third party software:
+
+Atmel ASF
+
+/* Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+
+CMSIS
+
+* -------------------------------------------------------------------
+* Copyright (C) 2011 ARM Limited. All rights reserved.  
+* 
+* Date:        11 October 2011  
+* Revision:    V3.00 
+*  
+* Project:     Cortex Microcontroller Software Interface Standard (CMSIS)
+* Title:       Release Note for CMSIS
+*
+* -------------------------------------------------------------------
+
+
+NOTE - Open the index.html file to access CMSIS documentation
+
+
+The Cortex Microcontroller Software Interface Standard (CMSIS) provides a single standard across all 
+Cortex-Mx processor series vendors. It enables code re-use and code sharing across software projects 
+and reduces time-to-market for new embedded applications.
+
+CMSIS is released under the terms of the end user license agreement ("CMSIS END USER LICENCE AGREEMENT.pdf").
+Any user of the software package is bound to the terms and conditions of the end user license agreement.
+
+FatFS
+
+ FatFs module is an open source software to implement FAT file system to
+ small embedded systems. This is a free software and is opened for education,
+ research and commercial developments under license policy of following trems.
+
+  Copyright (C) 2011, ChaN, all right reserved.
+
+ * The FatFs module is a free software and there is NO WARRANTY.
+ * No restriction on use. You can use, modify and redistribute it for
+   personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.
+ * Redistributions of source code must retain the above copyright notice.
+
+miniz
+
+miniz is public domain and has the following license:
+
+/*
+  This is free and unencumbered software released into the public domain.
+
+  Anyone is free to copy, modify, publish, use, compile, sell, or
+  distribute this software, either in source code form or as a compiled
+  binary, for any purpose, commercial or non-commercial, and by any
+  means.
+
+  In jurisdictions that recognize copyright laws, the author or authors
+  of this software dedicate any and all copyright interest in the
+  software to the public domain. We make this dedication for the benefit
+  of the public at large and to the detriment of our heirs and
+  successors. We intend this dedication to be an overt act of
+  relinquishment in perpetuity of all present and future rights to this
+  software under copyright law.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+  OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+  ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  OTHER DEALINGS IN THE SOFTWARE.
+
+  For more information, please refer to <http://unlicense.org/>
+*/

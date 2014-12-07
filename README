@@ -1,6 +1,28 @@
-This is the README file for keynjector. Unless otherwise stated, all files in the keynjector project are Copyright Jonas Hagmar 2014, and licensed under GPL v2. A copy of the GPL v2 can be found in COPYING.
+ABOUT THE PROJECT
 
-Please refer to the AUTHORS file for contact information.
+There are several bad solutions to managing passwords securely, e.g.,
+
+1) Having the same (easy to guess) password for every account
+2) Keeping your passwords on a Post-It under your keyboard
+3) Using a password manager on your computer
+
+You might be surprised that item 3 made the list, but password managers keep all passwords in a file encrypted with a master password. When the user retrieves a password, all other passwords are decrypted and exposed in RAM, in an environment with dozens of other, potentially malicious, processes with internet access. Password managing software often use secure memory to increase security. However, a keylogger can be used to record the master password, and then we are back at the original problem.
+
+The keynjector project tries to raise the bar by providing the password file decryption in a dedicated device, connected to the host with a USB cable. The password file, encrypted with OpenPGP symmetric encryption, is provided on a microSD card that the user inserts into the device. When the user requests a password, the device emulates a USB keyboard, and types the password on the host computer.
+
+This solution offers a more secure solution compared to a traditional password manager:
+1) There are no other processes running on the device that could potentially steal the information.
+2) The USB keyboard interface is one-directional. There is no possibility for the host to inject code into the keynjector device.
+3) The master password file can be easily removed and destroyed, e.g., by burning the microSD card, if needed.
+4) The device can be used on any computer that recognizes a USB keyboard, without any loss of security.
+
+The keynjector project consists of several sub-projects for the PCB layout, the firmware, the case for the device, etc. See below for a brief overview of the project directory structure.
+
+GENERAL INFORMATION
+
+Unless otherwise stated, all files in the keynjector project are Copyright Jonas Hagmar 2014, and licensed under GPL v2. A copy of the GPL v2 can be found in LICENSE.
+
+Please refer to the AUTHORS file for contact information. 
 
 DIRECTORY STRUCTURE
 

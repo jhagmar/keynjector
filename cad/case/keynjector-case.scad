@@ -55,6 +55,7 @@ screw_head_diameter = 3.8; // DIN 965 M2
 screw_body_diameter = 2; // DIN 965 M2
 screw_depth = 5;
 dbg_y_offset = -26; // offset for debug header window
+dbg_holder_dent_size = 2;
 dbg_x_offset = -8; 
 pcb_real_height_offset = (pcb_height - pcb_drawing_height)/2;
 usb_coord = [[usb_a/2,0], [usb_b/2, (usb_b - usb_a)/2],
@@ -94,11 +95,11 @@ holder2_x1 = holder1_x1
 	+ [case_width - 2*wall_thickness - holder_width,0,0];
 holder2_x2 = holder1_x2 
 	+ [case_width - 2*wall_thickness - holder_width,0,0];
-dbg_x2 = [case_width/2 - wall_thickness,
+dbg_x2 = [case_width/2 - wall_thickness + eps,
 	case_height/2 - wall_thickness + dbg_y_offset,
-	-case_depth/2 + wall_thickness + eps];
+	case_depth/2 - front_thickness - eps];
 dbg_x1 = [dbg_x2[0] + dbg_x_offset,
-	pcb_x1[1], -case_depth/2 - eps];
+	pcb_x1[1] - dbg_holder_dent_size, -case_depth/2 - eps];
 sup_size = 1; // size of display support
 sup1_x1 = [pcb_x1[0], pcb_x2[1] - sup_size, pcb_x1[2]-eps];
 sup1_x2 = [sup1_x1[0]+sup_size, sup1_x1[1]+sup_size, 
@@ -117,8 +118,11 @@ case_back();
 //case_back_dbg();
 //case_back_dbg_normalized();
 
-//holder();
+holder();
 //holder_normalized();
+
+//holder_dbg();
+//holder_dbg_normalized();
 
 case_front();
 //case_front_normalized();
@@ -318,6 +322,14 @@ module holder() {
 	
 }
 
+// holder with debug window dent
+module holder_dbg() {
+	difference() {
+		holder();
+		dbg();
+	}
+}
+
 // screen support
 module sup() {
 	box(sup1_x1, sup1_x2);
@@ -330,6 +342,15 @@ module holder_normalized() {
 		-(holder1_x1[1] + holder2_x2[1])/2,
 		-holder1_x1[2]]) {
 		holder();
+	}
+}
+
+// debug holder at 0
+module holder_dbg_normalized() {
+	translate([-(holder1_x2[0] + holder2_x1[0])/2,
+		-(holder1_x1[1] + holder2_x2[1])/2,
+		-holder1_x1[2]]) {
+		holder_dbg();
 	}
 }
 

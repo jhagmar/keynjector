@@ -21,7 +21,9 @@
 
 /// An implementation of CAST-128 (RFC 2144) specifically designed
 /// for decryption of symmetric OpenPGP (RFC 4880) blocks, where
-/// CFB mode is used, with a special reinitialization of the IV. 
+/// CFB mode is used, with a special reinitialization of the IV.
+
+#include <stdint.h>
 
 // CAST-128 context
 typedef struct {

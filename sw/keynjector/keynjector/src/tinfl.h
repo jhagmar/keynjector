@@ -9,6 +9,7 @@
 #define TINFL_HEADER_INCLUDED
 
 #include <stdlib.h>
+#include <stdint.h>
 
 typedef uint8_t mz_uint8;
 typedef int16_t mz_int16;

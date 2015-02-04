@@ -19,6 +19,8 @@
 #ifndef SHA1_H
 #define SHA1_H
 
+#include <stdint.h>
+
 /// An implementation of SHA-1 optimized for Atmel SAM 4S
 
 #define SHA1_CHUNK_SIZE 64

@@ -19,21 +19,22 @@
 
 /***** Parameters *****/
 
+tol = 0.1; // tolerance
 eps = 0.01;
 wall_thickness = 1; // thickness of case wall
 front_thickness = 0.5; // thickness of front wall
-pcb_width = 42.94;
+pcb_width = 42.94 + tol;
 pcb_drawing_height = 35.96;
-pcb_height = 36.2;
-pcb_depth = 1.76;
-component_depth = 2.7; // largest component is USB connector
-screen_width = 42.72;
-screen_height = 60.26;
+pcb_height = 36.2 + tol;
+pcb_depth = 1.76 + tol;
+component_depth = 2.7 + tol; // largest component is USB connector
+screen_width = 42.72 + tol;
+screen_height = 60.26 + tol;
 screen_back_film_thickness = 0.1;
-screen_depth = 3.6 + screen_back_film_thickness;
+screen_depth = 3.6 + screen_back_film_thickness + tol;
 screen_top = 2.9; // distance from top to viewport
 holder_height = 10; // height of screen holder
-holder_width = 10;
+holder_width = 8;
 usb_a = 4.75;
 usb_b = 7.86;
 usb_c = 2.8;
@@ -50,7 +51,7 @@ sd_height = 12;
 sd_depth = 2;
 nut_depth = 1.6; // max depth of DIN 934 M2 nut
 nut_diameter = 4; // diameter of DIN 934 M2 nut
-nut_clearance = 0.1;
+nut_clearance = 0.2;
 screw_head_diameter = 3.8; // DIN 965 M2
 screw_body_diameter = 2; // DIN 965 M2
 screw_depth = 5;
@@ -120,9 +121,6 @@ case_back();
 
 holder();
 //holder_normalized();
-
-//holder_dbg();
-//holder_dbg_normalized();
 
 case_front();
 //case_front_normalized();
@@ -322,14 +320,6 @@ module holder() {
 	
 }
 
-// holder with debug window dent
-module holder_dbg() {
-	difference() {
-		holder();
-		dbg();
-	}
-}
-
 // screen support
 module sup() {
 	box(sup1_x1, sup1_x2);
@@ -345,37 +335,38 @@ module holder_normalized() {
 	}
 }
 
-// debug holder at 0
-module holder_dbg_normalized() {
-	translate([-(holder1_x2[0] + holder2_x1[0])/2,
-		-(holder1_x1[1] + holder2_x2[1])/2,
-		-holder1_x1[2]]) {
-		holder_dbg();
-	}
-}
-
 // mask for the case front
 module front_mask() {
 	
-	difference() {
-		box([-case_width/2-eps, -case_height/2-eps,
-			- case_depth/2 + wall_thickness + pcb_depth + btn_width/2],
-			[case_width/2 + eps, case_height/2+eps, case_depth/2 + eps]);
+	union() {
+		difference() {
+			box([-case_width/2-eps, -case_height/2-eps,
+				- case_depth/2 + wall_thickness + pcb_depth + btn_width/2],
+				[case_width/2 + eps, case_height/2+eps, case_depth/2 + eps]);
+	
+			box([-case_width/2 + wall_thickness, -case_height/2 - eps, 
+				-case_depth/2], [case_width/2 - wall_thickness, 
+				-case_height/2 + wall_thickness +eps, 
+				case_depth/2 - front_thickness]);
+			
+			box([-case_width/2 + wall_thickness, case_height/2 
+				-wall_thickness - eps, -case_depth/2], 
+				[case_width/2 - wall_thickness, 
+				case_height/2 + eps, 
+				-case_depth/2 + wall_thickness + pcb_depth + usb_zoffset
+				+ usb_c]);
+	
+			box(sup1_x1 - [0,eps,0], sup2_x2);
+			
+		}
 
-		box([-case_width/2 + wall_thickness, -case_height/2 - eps, 
-			-case_depth/2], [case_width/2 - wall_thickness, 
-			-case_height/2 + wall_thickness +eps, 
-			case_depth/2 - front_thickness]);
-		
-		box([-case_width/2 + wall_thickness, case_height/2 
-			-wall_thickness - eps, -case_depth/2], 
-			[case_width/2 - wall_thickness, 
-			case_height/2 + eps, 
-			-case_depth/2 + wall_thickness + pcb_depth + usb_zoffset
-			+ usb_c]);
+		box([-case_width/2-eps, holder1_x1[1], holder1_x1[2]],
+			[-case_width/2 + wall_thickness + eps, holder1_x2[1], 
+			holder1_x2[2]]);
 
-		box(sup1_x1 - [0,eps,0], sup2_x2);
-		
+		box([case_width/2 - wall_thickness - eps, holder2_x1[1], 
+			holder2_x1[2]],
+			[case_width/2+eps, holder2_x2[1], holder2_x2[2]]);
 	}
 }
 
